@@ -87,7 +87,9 @@ public class Telepost implements DedicatedServerModInitializer {
             BuildPosts.register(dispatcher);
             PostList.register(dispatcher);
             ForceVisit.register(dispatcher);
-            RandomPost.register(dispatcher);
+
+            // TODO: It's broken, fix it
+            //RandomPost.register(dispatcher);
 
             if (CompatAddon.GRIEF_DEFENDER.isLoaded()) {
                 DeletePostClaim.register(dispatcher);
