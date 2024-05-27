@@ -118,8 +118,6 @@ public class PostAccommodation {
         BlockCategoryMask logsMask = new BlockCategoryMask(editSession.getWorld(), BlockCategories.LOGS);
         BlockCategoryMask leavesMask = new BlockCategoryMask(editSession.getWorld(), BlockCategories.LEAVES);
 
-        return  new MaskUnion(logsMask, leavesMask);
+        return new MaskUnion(logsMask, leavesMask);
     }
-
-
 }

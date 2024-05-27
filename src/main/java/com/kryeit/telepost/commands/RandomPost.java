@@ -2,8 +2,8 @@ package com.kryeit.telepost.commands;
 
 import com.kryeit.telepost.Telepost;
 import com.kryeit.telepost.TelepostMessages;
-import com.kryeit.telepost.Utils;
 import com.kryeit.telepost.post.Post;
+import com.kryeit.telepost.utils.Utils;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import me.lucko.fabric.api.permissions.v0.Permissions;
@@ -44,7 +44,7 @@ public class RandomPost {
         }
 
         // Choose a post at random from the list
-        List<Post> posts = Utils.getNonNamedPosts();
+        List<Post> posts = Utils.getUnnamedPosts();
         Post post = posts.get((int) (Math.random() * posts.size()));
 
         try {

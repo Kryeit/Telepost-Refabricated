@@ -2,6 +2,7 @@
   "telepost.standing": "Tienes que estar dentro del poste",
   "telepost.invite": "Has invitado a %s a tu casa hasta el próximo reinicio",
   "telepost.invited": "You've been invited by %s, use /visit %s",
+  "telepost.already_invited": "You've already invited %s",
   "telepost.nearest.named": "El poste más cercano está en: %s, se llama %s",
   "telepost.nearest": "El poste más cercano está en: %s",
   "telepost.already_named": "El poste ya tiene nombre",

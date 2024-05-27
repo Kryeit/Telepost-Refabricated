@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -44,7 +44,8 @@ dependencies {
     implementation include("org.iq80.leveldb:leveldb-api:${leveldb_version}")
 
     compileOnly "com.griefdefender:api:${griefdefender_version}"
-    include(modImplementation("me.lucko:fabric-permissions-api:${luckperms_version}"))
+    include(modImplementation("me.lucko:fabric-permissions-api:0.2-SNAPSHOT"))
+    compileOnly "net.luckperms:api:${luckperms_version}"
     modImplementation include("xyz.nucleoid:server-translations-api:${servertranslations_version}")
     modImplementation "com.sk89q.worldedit:worldedit-fabric-mc${worldedit_version}"
     compileOnly "com.github.BlueMap-Minecraft:BlueMapAPI:${bluemap_version}"

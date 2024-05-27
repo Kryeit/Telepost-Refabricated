@@ -2,9 +2,9 @@ package com.kryeit.telepost.commands;
 
 import com.kryeit.telepost.Telepost;
 import com.kryeit.telepost.TelepostMessages;
-import com.kryeit.telepost.Utils;
 import com.kryeit.telepost.post.Post;
 import com.kryeit.telepost.storage.bytes.NamedPost;
+import com.kryeit.telepost.utils.Utils;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -60,19 +60,16 @@ public class PostList {
         int startIndex = (page - 1) * 10;
         int endIndex = Math.min(startIndex + 10, posts.size());
 
-        for (int i = startIndex; i < 10; i++) {
-
-            if (i >= endIndex) {
+        for (int i = startIndex; i < startIndex + 10; i++) {
+            if (i < endIndex) {
+                NamedPost post = posts.get(i);
+                String name = post.name();
+                MutableText postText = Text.literal((i + 1) + ". ").formatted(Formatting.WHITE)
+                        .append(getListEntry(post, name, player));
+                player.sendMessage(postText, false);
+            } else {
                 player.sendMessage(Text.literal(""), false);
-                continue;
             }
-            
-            NamedPost post = posts.get(i);
-            String name = post.name();
-            MutableText postText = Text.literal((i + 1) + ". ").formatted(Formatting.WHITE)
-                    .append(getListEntry(post, name, player));
-
-            player.sendMessage(postText, false);
         }
 
         // Footer - Pagination Arrows

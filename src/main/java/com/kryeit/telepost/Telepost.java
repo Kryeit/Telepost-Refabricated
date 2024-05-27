@@ -8,10 +8,11 @@ import com.kryeit.telepost.compat.CompatAddon;
 import com.kryeit.telepost.config.ConfigReader;
 import com.kryeit.telepost.listeners.ServerTick;
 import com.kryeit.telepost.post.StructureHandler;
-import com.kryeit.telepost.storage.CommandDumpDB;
 import com.kryeit.telepost.storage.IDatabase;
 import com.kryeit.telepost.storage.LevelDBImpl;
 import com.kryeit.telepost.storage.NamedPostStorage;
+import de.bluecolored.bluemap.api.BlueMapAPI;
+import de.bluecolored.bluemap.api.BlueMapMap;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -21,14 +22,18 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
+import static com.kryeit.telepost.compat.BlueMapImpl.markerSet;
+import static com.kryeit.telepost.post.Post.WORLD;
 
 public class Telepost implements DedicatedServerModInitializer {
+
+    private static final Timer MONTHLY_TIMER = new Timer(true);
 
     public static Telepost instance;
     public static final String ID = "telepost";
@@ -60,22 +65,13 @@ public class Telepost implements DedicatedServerModInitializer {
 
         // Comment this out in dev environment
         StructureHandler.createStructures();
-
-        if (CompatAddon.BLUEMAP.isLoaded()) {
-            LOGGER.info("BlueMap is loaded, loading marker set from file...");
-            BlueMapImpl.loadMarkerSet();
-            LOGGER.info("BlueMap loaded successfully");
-        }
     }
 
     public void registerMonthlyCheck() {
         if (!ConfigReader.AUTONAMING) return;
 
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        MonthlyCheckRunnable monthCheckRunnable = new MonthlyCheckRunnable();
-
-        // Schedule to run every hour
-        executor.scheduleAtFixedRate(monthCheckRunnable, 0, 1, TimeUnit.HOURS);
+        long interval = Duration.ofHours(1).toMillis();
+        MONTHLY_TIMER.schedule(new MonthlyCheckRunnable(), interval, interval);
     }
 
     public void registerCommands() {
@@ -90,14 +86,31 @@ public class Telepost implements DedicatedServerModInitializer {
             BuildPosts.register(dispatcher);
             PostList.register(dispatcher);
             ForceVisit.register(dispatcher);
-            RandomPost.register(dispatcher);
 
+            // TODO: It's broken, fix it
+            //RandomPost.register(dispatcher);
+
+            if (CompatAddon.GRIEF_DEFENDER.isLoaded()) {
+                DeletePostClaim.register(dispatcher);
+            }
+            
             //CommandDumpDB.register(dispatcher);
         });
     }
 
     public void registerEvents() {
         ServerTickEvents.END_SERVER_TICK.register(new ServerTick());
+
+        if (CompatAddon.BLUEMAP.isLoaded()) {
+            BlueMapAPI.onEnable(api ->
+                    api.getWorld(WORLD).ifPresent(blueWorld -> {
+                        BlueMapImpl.loadMarkerSet();
+                        for (BlueMapMap map : blueWorld.getMaps()) {
+                            map.getMarkerSets().put("posts", markerSet);
+                        }
+                    })
+            );
+        }
     }
 
     public void initializeDatabases() {
@@ -107,20 +120,14 @@ public class Telepost implements DedicatedServerModInitializer {
         // For /randompost cooldown
         try {
             randomPostCooldown = new CooldownStorage("mods/" + ID + "/randompostcooldown");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Database of simple POST_ID -> PLAYER_ID mappings for QoL additions and Server Owner convenience
-        try {
-            playerNamedPosts = new NamedPostStorage("mods/" + ID +"/PlayerPosts");
+            playerNamedPosts = new NamedPostStorage("mods/" + ID, "playerPosts.properties");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void registerDisableEvent() {
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             database.stop();
         });
     }

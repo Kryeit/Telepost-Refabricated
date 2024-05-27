@@ -1,9 +1,9 @@
 package com.kryeit.telepost.commands;
 
 import com.kryeit.telepost.TelepostMessages;
-import com.kryeit.telepost.Utils;
 import com.kryeit.telepost.post.Post;
 import com.kryeit.telepost.storage.bytes.NamedPost;
+import com.kryeit.telepost.utils.Utils;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;

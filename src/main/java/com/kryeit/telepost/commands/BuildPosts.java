@@ -1,9 +1,9 @@
 package com.kryeit.telepost.commands;
 
 import com.kryeit.telepost.Telepost;
-import com.kryeit.telepost.Utils;
 import com.kryeit.telepost.compat.CompatAddon;
 import com.kryeit.telepost.compat.GriefDefenderImpl;
+import com.kryeit.telepost.utils.Utils;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;

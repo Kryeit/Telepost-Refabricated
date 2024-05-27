@@ -2,6 +2,7 @@
   "telepost.standing": "你需要站在一个地点",
   "telepost.invite": "你已邀请 %s 到你的家地点，直到下次重启",
   "telepost.invited": "You've been invited by %s, use /visit %s",
+  "telepost.already_invited": "You've already invited %s",
   "telepost.nearest.named": "最近的地点位于：%s，距离 %s",
   "telepost.nearest": "最近的地点位于：%s",
   "telepost.already_named": "该地点已经有名称",

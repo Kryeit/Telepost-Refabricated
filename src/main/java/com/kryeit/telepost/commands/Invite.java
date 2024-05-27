@@ -43,6 +43,12 @@ public class Invite {
             return 0;
         }
 
+        if (Telepost.invites.containsKey(invited.getUuid())) {
+            text = TelepostMessages.getMessage(player, "telepost.already_invited", Formatting.RED, invited.getName().getString());
+            player.sendMessage(text, true);
+            return 0;
+        }
+
         Telepost.invites.put(invited.getUuid(), player.getUuid());
 
         text = TelepostMessages.getMessage(player, "telepost.invite", Formatting.GREEN, name);

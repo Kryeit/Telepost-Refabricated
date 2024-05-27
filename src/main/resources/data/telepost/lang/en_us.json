@@ -2,6 +2,7 @@
   "telepost.standing": "You need to be standing on a post",
   "telepost.invite": "You've invited %s to your home post until the next restart",
   "telepost.invited": "You've been invited by %s, use /visit %s",
+  "telepost.already_invited": "You've already invited %s",
   "telepost.nearest.named": "The nearest post is at: %s, it's %s",
   "telepost.nearest": "The nearest post is at: %s",
   "telepost.already_named": "The post is already named",

@@ -2,14 +2,15 @@ package com.kryeit.telepost.post;
 
 import com.kryeit.telepost.MinecraftServerSupplier;
 import com.kryeit.telepost.Telepost;
-import com.kryeit.telepost.Utils;
 import com.kryeit.telepost.compat.CompatAddon;
 import com.kryeit.telepost.compat.GriefDefenderImpl;
 import com.kryeit.telepost.storage.bytes.HomePost;
 import com.kryeit.telepost.storage.bytes.NamedPost;
+import com.kryeit.telepost.utils.Utils;
 import com.kryeit.telepost.worldedit.PostAccommodation;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
@@ -87,7 +88,7 @@ public class Post {
     }
 
     public int getY() {
-        Utils.loadChunk(getX() >> 4, getZ() >> 4);
+        Utils.loadChunk(WORLD, getX() >> 4, getZ() >> 4);
         return WORLD.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
     }
 
@@ -120,6 +121,6 @@ public class Post {
     }
 
     public void teleport(ServerPlayerEntity player) {
-        player.teleport(getX() + 0.5, getY() + 1, getZ() + 0.5);
+        player.teleport((ServerWorld) WORLD, getX() + 0.5, getY() + 1, getZ() + 0.5, player.getYaw(), player.getPitch());
     }
 }

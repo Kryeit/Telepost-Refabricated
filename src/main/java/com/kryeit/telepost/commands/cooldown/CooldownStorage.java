@@ -19,12 +19,10 @@ public class CooldownStorage {
         filePath = Paths.get(filename);
         playerUUIDs = new HashSet<>();
 
-        // Create the file if it doesn't exist
         if (!Files.exists(filePath)) {
             Files.createFile(filePath);
         }
 
-        // Load existing UUIDs from file
         if (Files.exists(filePath)) {
             try (BufferedReader reader = Files.newBufferedReader(filePath)) {
                 String line;

@@ -3,9 +3,9 @@ package com.kryeit.telepost.autonaming;
 import com.kryeit.telepost.MinecraftServerSupplier;
 import com.kryeit.telepost.Telepost;
 import com.kryeit.telepost.TelepostMessages;
-import com.kryeit.telepost.Utils;
 import com.kryeit.telepost.post.Post;
 import com.kryeit.telepost.storage.bytes.NamedPost;
+import com.kryeit.telepost.utils.Utils;
 import net.minecraft.util.Formatting;
 
 import java.util.ArrayList;

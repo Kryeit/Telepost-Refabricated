@@ -4,12 +4,11 @@ import com.griefdefender.api.claim.Claim;
 import com.griefdefender.api.claim.TrustTypes;
 import com.kryeit.telepost.Telepost;
 import com.kryeit.telepost.TelepostMessages;
-import com.kryeit.telepost.Utils;
-import com.kryeit.telepost.compat.BlueMapImpl;
 import com.kryeit.telepost.compat.CompatAddon;
 import com.kryeit.telepost.compat.GriefDefenderImpl;
 import com.kryeit.telepost.post.Post;
 import com.kryeit.telepost.storage.bytes.NamedPost;
+import com.kryeit.telepost.utils.Utils;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -21,14 +20,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.kryeit.telepost.compat.GriefDefenderImpl.NEEDED_CLAIMBLOCKS;
 
 public class NamePost {
-    public static int execute(CommandContext<ServerCommandSource> context) throws IOException {
+    public static int execute(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
 
@@ -60,36 +58,34 @@ public class NamePost {
         }
 
         // Check if player has already named a post
-        if (Telepost.playerNamedPosts.getHashMap().containsValue(player.getUuid())) {
+        if (Telepost.playerNamedPosts.hasPlayer(player.getUuid()) && !Utils.check(source, "telepost.namepost", false)) {
             text = TelepostMessages.getMessage(player, "telepost.already_named", Formatting.RED);
             player.sendMessage(text, true);
             return 0;
         }
 
-        if (Permissions.check(source, "telepost.namepost", false) && CompatAddon.GRIEF_DEFENDER.isLoaded()) {
+        if (CompatAddon.GRIEF_DEFENDER.isLoaded()) {
             if (GriefDefenderImpl.getClaimBlocks(player.getUuid()) < NEEDED_CLAIMBLOCKS) {
                 text = TelepostMessages.getMessage(player, "telepost.name.claimblocks", Formatting.RED, NEEDED_CLAIMBLOCKS);
                 player.sendMessage(text);
                 return 0;
             }
 
-            Telepost.playerNamedPosts.addElement(postID, player.getUuid());
-
             Claim claim = GriefDefenderImpl.getClaim(post);
             if (claim != null) {
-                player.sendMessage(Text.literal("You've been granted builder trust in the post claim"));
-                claim.addUserTrust(player.getUuid(), TrustTypes.BUILDER);
+                player.sendMessage(Text.literal("You've been granted manager trust in the post claim"));
+                claim.addUserTrust(player.getUuid(), TrustTypes.MANAGER);
             }
+        }
+
+        if (!Utils.check(source, "telepost.namepost", false)){
+            Telepost.playerNamedPosts.assignPostToPlayer(postID, player.getUuid());
         }
 
         Telepost.getDB().addNamedPost(new NamedPost(postID, postName, post.getPos()));
 
         text = TelepostMessages.getMessage(player, "telepost.named", Formatting.GREEN, postName, post.getStringCoords());
         player.sendMessage(text);
-
-        if (CompatAddon.BLUEMAP.isLoaded()) {
-            BlueMapImpl.createMarker(post, postName);
-        }
 
         return Command.SINGLE_SUCCESS;
     }
@@ -98,13 +94,7 @@ public class NamePost {
         dispatcher.register(CommandManager.literal("namepost")
                 .requires(source -> Permissions.check(source, "telepost.namepost", true) || source.hasPermissionLevel(4))
                 .then(CommandManager.argument("name", StringArgumentType.greedyString())
-                        .executes(context -> {
-                            try {
-                                return execute(context);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
+                        .executes(NamePost::execute)
                 )
         );
     }

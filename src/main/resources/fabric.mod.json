@@ -27,6 +27,7 @@
   "suggests": {
     "griefdefender": "*",
     "worldedit": "*",
-    "bluemap": "*"
+    "bluemap": "*",
+    "luckperms": "*"
   }
 }

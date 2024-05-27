@@ -1,11 +1,11 @@
 package com.kryeit.telepost.commands;
 
 import com.kryeit.telepost.Telepost;
-import com.kryeit.telepost.Utils;
 import com.kryeit.telepost.compat.BlueMapImpl;
 import com.kryeit.telepost.compat.CompatAddon;
 import com.kryeit.telepost.post.Post;
 import com.kryeit.telepost.storage.bytes.NamedPost;
+import com.kryeit.telepost.utils.Utils;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -18,13 +18,10 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-
-import static com.kryeit.telepost.Telepost.LOGGER;
 
 public class UnnamePost {
     public static int execute(CommandContext<ServerCommandSource> context) {
@@ -50,12 +47,7 @@ public class UnnamePost {
             return 0;
         }
 
-        try {
-            Telepost.playerNamedPosts.deleteElement(postID);
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.warn("Failed to delete player named post element (Was admin post?): " + postID);
-        }
+        Telepost.playerNamedPosts.revokePost(postID);
 
         Telepost.getDB().deleteNamedPost(postID);
 
