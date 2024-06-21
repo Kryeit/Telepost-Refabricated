@@ -87,6 +87,7 @@ public class Telepost implements DedicatedServerModInitializer {
             BuildPosts.register(dispatcher);
             PostList.register(dispatcher);
             ForceVisit.register(dispatcher);
+            PostHelp.register(dispatcher);
 
             // TODO: It's broken, fix it
             //RandomPost.register(dispatcher);
