@@ -21,7 +21,7 @@ import static com.kryeit.telepost.post.Post.WORLD;
 
 public class PostBuilder {
 
-    private static final Identifier DEFAULT_STRUCTURE = new Identifier("minecraft:default");
+    private static final Identifier DEFAULT_STRUCTURE = Identifier.of("minecraft:default");
 
     public static String getBiomeName(Optional<RegistryKey<Biome>> biome) {
         if (biome.isEmpty()) return "";
@@ -33,7 +33,7 @@ public class PostBuilder {
 
     public static Optional<StructureTemplate> getStructureTemplate(Optional<RegistryKey<Biome>> biome) {
         StructureTemplateManager manager = MinecraftServerSupplier.getServer().getStructureTemplateManager();
-        Optional<StructureTemplate> template = manager.getTemplate(new Identifier(getBiomeName(biome)));
+        Optional<StructureTemplate> template = manager.getTemplate(Identifier.of(getBiomeName(biome)));
 
         if (template.isEmpty()) {
             template = manager.getTemplate(DEFAULT_STRUCTURE);

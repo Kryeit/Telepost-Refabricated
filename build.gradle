@@ -30,7 +30,7 @@ repositories {
     }
     maven {
         name = "BlueMap"
-        url = 'https://jitpack.io'
+        url = "https://repo.bluecolored.de/releases"
     }
 }
 
@@ -48,7 +48,7 @@ dependencies {
     compileOnly "net.luckperms:api:${luckperms_version}"
     modImplementation include("xyz.nucleoid:server-translations-api:${servertranslations_version}")
     modImplementation "com.sk89q.worldedit:worldedit-fabric-mc${worldedit_version}"
-    compileOnly "com.github.BlueMap-Minecraft:BlueMapAPI:${bluemap_version}"
+    compileOnly "de.bluecolored.bluemap:BlueMapAPI:${bluemap_version}"
 }
 
 processResources {
