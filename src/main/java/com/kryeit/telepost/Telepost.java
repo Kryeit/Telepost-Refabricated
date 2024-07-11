@@ -118,8 +118,8 @@ public class Telepost implements DedicatedServerModInitializer {
 
         // For /randompost cooldown
         try {
-            randomPostCooldown = new CooldownStorage("mods/" + ID + "/randompostcooldown");
-            playerNamedPosts = new NamedPostStorage("mods/" + ID, "playerPosts.properties");
+            randomPostCooldown = new CooldownStorage("world/" + ID + "/randompostcooldown");
+            playerNamedPosts = new NamedPostStorage("world/" + ID, "playerPosts.properties");
         } catch (IOException e) {
             e.printStackTrace();
         }

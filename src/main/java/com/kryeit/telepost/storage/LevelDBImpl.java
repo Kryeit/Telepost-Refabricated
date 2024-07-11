@@ -34,7 +34,7 @@ public class LevelDBImpl implements IDatabase {
         options.cacheSize(4_194_304); // 4 MB
 
         try {
-            return Iq80DBFactory.factory.open(new File("mods/" + ID + "/db/" + name), options);
+            return Iq80DBFactory.factory.open(new File("world/" + ID + "/db/" + name), options);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
