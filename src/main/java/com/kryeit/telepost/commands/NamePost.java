@@ -82,7 +82,7 @@ public class NamePost {
             Telepost.playerNamedPosts.assignPostToPlayer(postID, player.getUuid());
         }
 
-        Telepost.getDB().addNamedPost(new NamedPost(postID, postName, post.getPos()));
+        Telepost.getDB().addNamedPost(new NamedPost(postID, postName, post.getPos(), false));
 
         text = TelepostMessages.getMessage(player, "telepost.named", Formatting.GREEN, postName, post.getStringCoords());
         player.sendMessage(text);

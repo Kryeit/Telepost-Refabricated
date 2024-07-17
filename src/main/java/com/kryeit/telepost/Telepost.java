@@ -13,7 +13,6 @@ import com.kryeit.telepost.storage.LevelDBImpl;
 import com.kryeit.telepost.storage.NamedPostStorage;
 import de.bluecolored.bluemap.api.BlueMapAPI;
 import de.bluecolored.bluemap.api.BlueMapMap;
-import de.bluecolored.bluemap.api.markers.MarkerSet;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -88,6 +87,7 @@ public class Telepost implements DedicatedServerModInitializer {
             PostList.register(dispatcher);
             ForceVisit.register(dispatcher);
             PostHelp.register(dispatcher);
+            PrivatePost.register(dispatcher);
 
             // TODO: It's broken, fix it
             //RandomPost.register(dispatcher);
