@@ -40,7 +40,7 @@ public class SuggestionsProvider {
         String remaining = builder.getRemaining().toLowerCase();
 
         for (NamedPost namedPost : Telepost.getDB().getNamedPosts()) {
-            if (namedPost.name().toLowerCase().startsWith(remaining)) {
+            if (namedPost.name().toLowerCase().startsWith(remaining) && !namedPost.isPrivate()) {
                 builder.suggest(namedPost.name());
             }
         }

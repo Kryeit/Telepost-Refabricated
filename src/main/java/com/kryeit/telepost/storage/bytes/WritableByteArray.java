@@ -62,6 +62,10 @@ public class WritableByteArray {
         writeLong(uuid.getLeastSignificantBits());
     }
 
+    public void writeBoolean(boolean b) {
+        data.write(b ? 1 : 0);
+    }
+
     public void writeBytes(byte[] bytes) {
         for (byte b : bytes) writeByte(b);
     }

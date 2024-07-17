@@ -14,6 +14,9 @@ public class BlueMapImpl {
 
     public static void loadMarkerSet() {
         for (NamedPost post : Telepost.getDB().getNamedPosts()) {
+            if (post.isPrivate())
+                continue;
+
             createMarker(post, post.name());
         }
     }

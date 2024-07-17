@@ -19,6 +19,7 @@ import net.minecraft.util.Formatting;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class PostList {
     public static int execute(CommandContext<ServerCommandSource> context) {
@@ -31,7 +32,9 @@ public class PostList {
             return 0;
         }
 
-        List<NamedPost> posts = Telepost.getInstance().database.getNamedPosts();
+        List<NamedPost> posts = Telepost.getInstance().database.getNamedPosts().stream()
+                .filter(post -> !post.isPrivate())
+                .collect(Collectors.toList());;
 
         if (posts.isEmpty()) {
             player.sendMessage(TelepostMessages.getMessage(player, "telepost.postlist.no-posts", Formatting.RED), false);

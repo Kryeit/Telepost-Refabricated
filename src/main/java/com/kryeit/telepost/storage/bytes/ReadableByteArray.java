@@ -64,4 +64,12 @@ public class ReadableByteArray {
     public UUID readUUID() {
         return new UUID(readLong(), readLong());
     }
+
+    public boolean readBoolean() {
+        return data[position++] != 0;
+    }
+
+    public boolean hasRemaining() {
+        return position < data.length;
+    }
 }
