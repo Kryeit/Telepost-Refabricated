@@ -46,7 +46,7 @@ public class PrivatePost {
                     post.getPos(),
                     !wasPrivate));
 
-            player.sendMessage(Text.literal("The post is now " + (namedPost.get().isPrivate() ? "private" : "public")), true);
+            player.sendMessage(Text.literal("The post is now " + (namedPost.get().isPrivate() ? "public" : "private")), true);
         }
         return Command.SINGLE_SUCCESS;
     }
