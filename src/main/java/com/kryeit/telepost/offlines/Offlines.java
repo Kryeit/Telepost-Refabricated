@@ -2,11 +2,17 @@ package com.kryeit.telepost.offlines;
 
 import com.kryeit.telepost.MinecraftServerSupplier;
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.GameProfileRepository;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.UserCache;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +32,27 @@ public class Offlines {
     public static String getNameByUUID(UUID id) {
         ServerPlayerEntity player = MinecraftServerSupplier.getServer().getPlayerManager().getPlayer(id);
         if (player != null) return player.getName().getString();
-        UserCache userCache = MinecraftServerSupplier.getServer().getUserCache();
-        if (userCache == null) return "Unknown";
 
-        Optional<GameProfile> gameProfile = userCache.getByUuid(id);
-        if (gameProfile.isEmpty()) return "Unknown";
-        return gameProfile.get().getName();
+        // Fetch mojang session server and get the player name
+        try {
+            URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + id.toString());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept", "application/json");
+
+            if (connection.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
+            JsonReader reader = Json.createReader(br);
+            JsonObject jsonObject = reader.readObject();
+            connection.disconnect();
+            return jsonObject.getString("name");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static List<String> getPlayerNames() {

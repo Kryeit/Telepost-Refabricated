@@ -48,9 +48,7 @@ public class Utils {
 
         if (id == null) return "Admin";
 
-        ServerPlayerEntity player = MinecraftServerSupplier.getServer().getPlayerManager().getPlayer(id);
-
-        return player == null ? Offlines.getNameByUUID(id) : player.getName().getString();
+        return Offlines.getNameByUUID(id);
     }
 
     public static List<Post> getPosts() {
