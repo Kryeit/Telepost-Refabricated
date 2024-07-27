@@ -22,6 +22,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class PostList {
+
+    private static final int PAGE_SIZE = 7;
+
     public static int execute(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
@@ -42,7 +45,7 @@ public class PostList {
         }
         Collections.sort(posts);
 
-        int pages = (int) Math.ceil((double) posts.size() / 10);
+        int pages = (int) Math.ceil((double) posts.size() / PAGE_SIZE);
         int page;
         try {
             page = IntegerArgumentType.getInteger(context, "page");
@@ -60,10 +63,10 @@ public class PostList {
         player.sendMessage(TelepostMessages.getMessage(player, "telepost.postlist.header", Formatting.GOLD), false);
         player.sendMessage(Text.literal("------------").formatted(Formatting.DARK_GRAY), false);
 
-        int startIndex = (page - 1) * 10;
-        int endIndex = Math.min(startIndex + 10, posts.size());
+        int startIndex = (page - 1) * PAGE_SIZE;
+        int endIndex = Math.min(startIndex + PAGE_SIZE, posts.size());
 
-        for (int i = startIndex; i < startIndex + 10; i++) {
+        for (int i = startIndex; i < startIndex + PAGE_SIZE; i++) {
             if (i < endIndex) {
                 NamedPost post = posts.get(i);
                 String name = post.name();
