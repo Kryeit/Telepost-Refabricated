@@ -86,8 +86,10 @@ public class Telepost implements DedicatedServerModInitializer {
             BuildPosts.register(dispatcher);
             PostList.register(dispatcher);
             ForceVisit.register(dispatcher);
-            PostHelp.register(dispatcher);
             PrivatePost.register(dispatcher);
+
+            // IMPORTANT: Enable only for Kryeit builds
+            //PostHelp.register(dispatcher);
 
             // TODO: It's broken, fix it
             //RandomPost.register(dispatcher);

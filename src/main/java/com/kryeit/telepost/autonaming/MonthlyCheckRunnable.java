@@ -12,7 +12,7 @@ import java.util.TimerTask;
 import static com.kryeit.telepost.Telepost.ID;
 
 public class MonthlyCheckRunnable extends TimerTask {
-    private static final String FILE_PATH = "mods/" + ID + "/lastCheckedMonth.txt";
+    private static final String FILE_PATH = "world/" + ID + "/lastCheckedMonth.txt";
     private int lastCheckedMonth;
 
     public MonthlyCheckRunnable() {
