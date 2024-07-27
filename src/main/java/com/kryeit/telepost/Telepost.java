@@ -102,14 +102,17 @@ public class Telepost implements DedicatedServerModInitializer {
 
     public void registerEvents() {
         ServerTickEvents.END_SERVER_TICK.register(new ServerTick());
-        BlueMapAPI.onEnable(api ->
-                api.getWorld(WORLD).ifPresent(blueWorld -> {
-                    BlueMapImpl.loadMarkerSet();
-                    for (BlueMapMap map : blueWorld.getMaps()) {
-                        map.getMarkerSets().put("posts", markerSet);
-                    }
-                })
-        );
+
+        if (CompatAddon.BLUEMAP.isLoaded()) {
+            BlueMapAPI.onEnable(api ->
+                    api.getWorld(WORLD).ifPresent(blueWorld -> {
+                        BlueMapImpl.loadMarkerSet();
+                        for (BlueMapMap map : blueWorld.getMaps()) {
+                            map.getMarkerSets().put("posts", markerSet);
+                        }
+                    })
+            );
+        }
     }
 
     public void initializeDatabases() {

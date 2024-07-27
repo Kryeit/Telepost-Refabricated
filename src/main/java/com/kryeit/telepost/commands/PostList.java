@@ -43,10 +43,12 @@ public class PostList {
             player.sendMessage(TelepostMessages.getMessage(player, "telepost.postlist.no-posts", Formatting.RED), false);
             return 1;
         }
+
         Collections.sort(posts);
 
         int pages = (int) Math.ceil((double) posts.size() / PAGE_SIZE);
         int page;
+
         try {
             page = IntegerArgumentType.getInteger(context, "page");
         } catch (IllegalArgumentException e) {
