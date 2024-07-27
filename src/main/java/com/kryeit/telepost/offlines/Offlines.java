@@ -1,12 +1,13 @@
 package com.kryeit.telepost.offlines;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kryeit.telepost.MinecraftServerSupplier;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.UserCache;
 
 import javax.json.Json;
-import javax.json.JsonObject;
 import javax.json.JsonReader;
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,30 +32,35 @@ public class Offlines {
 
     public static String getNameByUUID(UUID id) {
         ServerPlayerEntity player = MinecraftServerSupplier.getServer().getPlayerManager().getPlayer(id);
-        if (player != null) return player.getName().getString();
+        if (player != null) {
+            return player.getName().getString();
+        }
 
-        // Fetch mojang session server and get the player name
+        String uuidString = id.toString().replace("-", ""); // Remove hyphens from UUID
+        String url = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuidString;
+
         try {
-            URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + id.toString());
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", "application/json");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
 
-            if (connection.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode());
+            int responseCode = connection.getResponseCode();
+            if (responseCode == 200) {
+                try (InputStreamReader reader = new InputStreamReader(connection.getInputStream())) {
+                    JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+                    return jsonObject.get("name").getAsString();
+                }
+            } else if (responseCode == 204) {
+                return "";
+            } else {
+                throw new RuntimeException("HTTP error code: " + responseCode);
             }
-
-            BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
-            JsonReader reader = Json.createReader(br);
-            JsonObject jsonObject = reader.readObject();
-            connection.disconnect();
-            return jsonObject.getString("name");
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
     }
-
     public static List<String> getPlayerNames() {
         List<String> players = new ArrayList<>();
         File playerDataDirectory = new File("world/playerdata/");
