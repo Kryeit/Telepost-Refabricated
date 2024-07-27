@@ -48,7 +48,7 @@ public class AutonamingUtils {
                 return;
             }
 
-            Telepost.getDB().addNamedPost(new NamedPost(Utils.nameToId(name), name, post.getPos()));
+            Telepost.getDB().addNamedPost(new NamedPost(Utils.nameToId(name), name, post.getPos(), false));
             Utils.executeCommandAsServer("/setworldspawn " + post.getX() + " " + (post.getY() + 1) + " " + post.getZ());
 
             // Broadcast to all players
