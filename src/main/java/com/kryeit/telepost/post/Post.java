@@ -14,6 +14,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
+import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
@@ -121,6 +122,6 @@ public class Post {
     }
 
     public void teleport(ServerPlayerEntity player) {
-        player.teleport((ServerWorld) WORLD, getX() + 0.5, getY() + 1, getZ() + 0.5, player.getYaw(), player.getPitch());
+        player.teleport((ServerWorld) WORLD, getX() + 0.5, (double) getY() + 1, getZ() + 0.5, null, player.getYaw(), player.getPitch(), false);
     }
 }
